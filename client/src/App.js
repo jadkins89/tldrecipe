@@ -1,21 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Loader from "react-loader-spinner";
 
 import "./App.css";
 
 const RecipeComponent = props => {
   const [recipe, setRecipe] = useState("");
+  const url = props.match.params.url;
+  const [error, setError] = useState(false);
+
   useEffect(() => {
-    let url = props.match.params.url;
     if (url) {
       (async () => {
-        let response = await fetch(`api/recipe/${url}`);
-        let data = await response.json();
-        console.log(data);
-        setRecipe(data);
+        try {
+          let response = await fetch(`api/recipe/${url}`);
+          let data = await response.json();
+          setRecipe(data);
+        } catch (err) {
+          setError(true);
+        }
       })();
     }
-  }, [props.match.params.url]);
+  }, [url]);
 
   if (recipe) {
     return (
@@ -24,8 +30,27 @@ const RecipeComponent = props => {
         <img src={recipe.image} style={{ maxWidth: `50%` }} alt="Recipe" />
       </div>
     );
+  } else if (error) {
+    return (
+      <div className="App">
+        Something bad happened 😭. We didn't find anything at{" "}
+        {decodeURIComponent(url)}.
+      </div>
+    );
   } else {
-    return <div className="App">LOADING</div>;
+    return (
+      <div
+        style={{
+          width: `100%`,
+          height: `100%`,
+          display: `flex`,
+          justifyContent: `center`,
+          alignItems: `center`
+        }}
+      >
+        <Loader type="ThreeDots" height="100" width="100" />
+      </div>
+    );
   }
 };
 

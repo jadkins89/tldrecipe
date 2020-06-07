@@ -12,10 +12,10 @@ app.get("/api/recipe/:url", async (req, res) => {
   let { url } = req.params;
   try {
     let recipe = await recipeScraper(url);
-    return res.json(recipe);
+    res.json(recipe);
   } catch (err) {
-    console.error(err);
-    res.serverError();
+    console.error(`Error: ${err.message}`);
+    res.sendStatus(404);
   }
 });
 
