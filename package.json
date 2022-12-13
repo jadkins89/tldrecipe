@@ -10,7 +10,7 @@
     "build": "cd client && npm run build"
   },
   "dependencies": {
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "recipe-scraper": "^1.19.1"
   },
   "devDependencies": {
